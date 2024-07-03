@@ -98,7 +98,6 @@ class authControllers {
 
   getUser = async (req, res) => {
     const { id, role } = req;
-
     try {
       if (role === "admin") {
         const user = await adminModel.findById(id);
@@ -109,7 +108,6 @@ class authControllers {
       }
     } catch (error) {
       responseReturn(res, 500, { error: "Internal Server Error" });
-
     }
   }; // End getUSer Method
 }
