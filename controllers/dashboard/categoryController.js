@@ -28,21 +28,25 @@ class categoryControllers {
           });
           if (result) {
             const category = await categoryModel.create({
-              name, slug, image: result.url
-            })
-            responseReturn(res, 201, { category, message: "Category Added Successfully" });
+              name,
+              slug,
+              image: result.url,
+            });
+            responseReturn(res, 201, {
+              category,
+              message: "Category Added Successfully",
+            });
           } else {
             responseReturn(res, 404, { error: "Image Upload File" });
           }
         } catch (error) {
           responseReturn(res, 500, { error: "Internet Server Error" });
-
         }
       }
     });
   };
   get_category = async (req, res) => {
-    console.log("this is working");
+    const { page, searchValue, parPage } = req.query;
   };
 }
 
