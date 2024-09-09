@@ -131,6 +131,16 @@ class productController {
 }
 
   // end method
+  
+  product_image_update = async(req, res)=>{
+    const form =formidable({multiples: true})
+    form.parse(req, (err,field, files)=>{
+      console.log(field);
+      console.log(files);
+      
+    })
+  }
+  // end method
 }
 
 module.exports = new productController();
