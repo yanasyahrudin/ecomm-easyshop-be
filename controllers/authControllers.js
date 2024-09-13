@@ -130,6 +130,7 @@ class authControllers{
             
         } catch (error) {
             responseReturn(res,500,{error: 'Internal Server Error'})
+            
         }
 
 
@@ -150,10 +151,21 @@ class authControllers{
               const {image}=files
 
               try {
-                
-              } catch (error) {
-                
-              }
+                const result = await cloudinary.uploader.upload(image.filepath, { folder: 'profile'})
+                if (result) {
+                    await sellerModel.findByIdAndUpdate(id, {
+                        image: result.url
+                    }) 
+                    const userInfo = await sellerModel.findById(id)
+                    responseReturn(res, 201,{ message : 'Profile Image Upload Successfully',userInfo})
+                } else {
+                    responseReturn(res, 404,{ error : 'Image Upload Failed'})
+                }
+
+            } catch (error) {
+
+                responseReturn(res, 500,{ error : error.message })
+            }
         })  
     }
     // End getUser Method 
