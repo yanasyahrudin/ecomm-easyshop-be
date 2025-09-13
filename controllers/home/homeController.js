@@ -62,6 +62,9 @@ class homeController {
     }
   };
   //end method
+
+  price_range_product = async (req, res) => {}
+  //end method
 }
 
 module.exports = new homeController();
