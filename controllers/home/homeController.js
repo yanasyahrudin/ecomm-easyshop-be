@@ -1,6 +1,7 @@
 const categoryModel = require("../../models/categoryModel");
 const productModel = require("../../models/productModel");
 const { responseReturn } = require("../../utiles/response");
+const queryProducts = require("../../utiles/queryProducts");
 class homeController {
   formateProduct = (products) => {
     const productArray = [];
@@ -71,7 +72,7 @@ class homeController {
         createdAt: -1, // 1 for asc - is for desc
       });
       const latest_product = this.formateProduct(products);
-      const getForPrice = await productModel.find({}).sort({ "price": 1 });
+      const getForPrice = await productModel.find({}).sort({ price: 1 });
       if (getForPrice.length > 0) {
         priceRange.high = getForPrice[getForPrice.length - 1].price;
         priceRange.low = getForPrice[0].price;
@@ -87,8 +88,19 @@ class homeController {
   //end method
 
   query_products = async (req, res) => {
-  console.log(req.query);
-  }
+    const parPage = 12;
+    req.query.parPage = parPage;
+    console.log(req.query);
+
+    try {
+      const products = await productModel.find({}).limit(parPage).sort({
+        createdAt: -1,
+      });
+      const totalProduct = new this.queryProfuct()
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
 }
 
 module.exports = new homeController();
