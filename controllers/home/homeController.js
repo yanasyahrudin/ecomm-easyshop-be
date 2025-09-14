@@ -96,7 +96,28 @@ class homeController {
       const products = await productModel.find({}).limit(parPage).sort({
         createdAt: -1,
       });
-      const totalProduct = new this.queryProfuct()
+      const totalProduct = new queryProducts(products, req.query)
+        .categoryQuery()
+        .ratingQuery()
+        .priceQuery()
+        .sortByPrice()
+        .countProducts();
+
+      const result = new queryProducts(products, req.query)
+        .categoryQuery()
+        .priceQuery()
+        .ratingQuery()
+        .sortByPrice()
+        .limit()
+        .skip()
+        .getProducts();
+      responseReturn(res, 200, {
+        products: result,
+        totalProduct,
+        parPage,
+      });
+
+      
     } catch (error) {
       console.log(error.message);
     }
