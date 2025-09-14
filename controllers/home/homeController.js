@@ -108,8 +108,8 @@ class homeController {
         .priceQuery()
         .ratingQuery()
         .sortByPrice()
-        .limit()
         .skip()
+        .limit()
         .getProducts();
       responseReturn(res, 200, {
         products: result,
