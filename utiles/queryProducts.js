@@ -25,6 +25,17 @@ class queryProducts {
     return this;
   };
 
+  searchQuery = () => {
+    this.products = this.query.searchValue
+      ? this.products.filter(
+          (p) =>
+            p.name.toUpperCase().indexOf(this.query.searchValue.toUpperCase()) >
+            -1
+        )
+      : this.products;
+    return this;
+  };
+
   priceQuery = () => {
     this.products = this.products.filter(
       (p) => p.price >= this.query.lowPrice && p.price <= this.query.highPrice
@@ -48,38 +59,37 @@ class queryProducts {
   };
 
   skip = () => {
-    let {pageNumber} = this.query
+    let { pageNumber } = this.query;
     const skipPage = (parseInt(pageNumber) - 1) * this.query.parPage;
-    let skipProduct = []
+    let skipProduct = [];
 
     for (let i = skipPage; i < this.products.length; i++) {
-      skipProduct.push(this.products[i])
+      skipProduct.push(this.products[i]);
     }
-    this.products = skipProduct
+    this.products = skipProduct;
     return this;
-  }
+  };
 
   limit = () => {
-    let temp = []
+    let temp = [];
     if (this.products.length > this.query.parPage) {
       for (let i = 0; i < this.query.parPage; i++) {
-        temp.push(this.products[i])
+        temp.push(this.products[i]);
       }
-      
-    }else{
-      temp = this.products
+    } else {
+      temp = this.products;
     }
-    this.products = temp
+    this.products = temp;
     return this;
-  }
+  };
 
   getProducts = () => {
     return this.products;
-  }
+  };
 
   countProducts = () => {
     return this.products.length;
-  }
+  };
 }
 
 module.exports = queryProducts;
