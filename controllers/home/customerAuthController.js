@@ -39,6 +39,11 @@ class customerAuthController {
     }
   };
   //end method
+
+  customer_login = async (req, res) => {
+    console.log(req.body);
+  }
+  //end method
 }
 
 module.exports = new customerAuthController();
