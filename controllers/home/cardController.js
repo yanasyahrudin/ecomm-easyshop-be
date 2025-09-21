@@ -1,6 +1,6 @@
 const cardModel = require("../../models/cardModel");
 const {responseReturn} = require("../../utiles/response");
-
+const {mongo: {ObjectId}} = require("mongoose");
 class cardController {
   add_to_card = async (req, res) => {
     const { userId, productId, quantity } = req.body;
@@ -38,6 +38,24 @@ class cardController {
     }
   };
   //end method
+
+  get_card_product = async (req, res) => {
+    const { userId } = req.params;
+    
+    try {
+      const card_products = await cardModel.aggregate([
+        {
+          $match: {
+            userId: new Object(userId),
+          },
+        },
+      ]);
+      console.log(card_products);
+
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
 }
 
 module.exports = new cardController();
