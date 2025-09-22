@@ -141,6 +141,17 @@ class cardController {
       console.log(error.message);
     }
   }; //end method
+
+  delete_card_products = async (req, res) => {
+    const { card_Id } = req.params;
+    
+    try {
+      await cardModel.findByIdAndDelete(card_Id);
+      responseReturn(res, 200, { message: "Product Remove Successfully" });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }; //end method
 }
 
 module.exports = new cardController();
