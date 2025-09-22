@@ -152,6 +152,23 @@ class cardController {
       console.log(error.message);
     }
   }; //end method
+
+  quantity_inc = async (req, res) => {
+    const { card_Id } = req.params;
+    try {
+      const product = await cardModel.findById(
+        card_Id
+      );
+      const { quantity } = product;
+      await cardModel.findByIdAndUpdate(card_Id, { quantity: quantity + 1 })
+      responseReturn(res, 200, {
+        message: "Qty Updated",
+        product,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }; //end method
 }
 
 module.exports = new cardController();

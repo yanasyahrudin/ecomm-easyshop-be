@@ -4,5 +4,6 @@ const router = require('express').Router()
 router.post('/home/product/add-to-card', cardController.add_to_card)
 router.get('/home/product/get-card-product/:userId', cardController.get_card_product)
 router.delete('/home/product/delete-card-product/:card_Id', cardController.delete_card_products)
+router.put('/home/product/quantity-inc/:card_Id', cardController.quantity_inc)
 
 module.exports = router
