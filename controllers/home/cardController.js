@@ -49,7 +49,7 @@ class cardController {
       const card_products = await cardModel.aggregate([
         {
           $match: {
-            userId: new Object(userId),
+            userId: { $eq: new ObjectId(userId) },
           },
         },
         {
@@ -88,7 +88,7 @@ class cardController {
       } //end for
       let p = [];
       let unique = [
-        ...new Set(stockProduct.map((p) => p.products[0].sellerId.toString())), 
+        ...new Set(stockProduct.map((p) => p.products[0].sellerId.toString())),
       ];
       for (let i = 0; i < unique.length; i++) {
         let price = 0;
@@ -97,7 +97,9 @@ class cardController {
           if (unique[i] === tempProduct.sellerId.toString()) {
             let pri = 0;
             if (tempProduct.discount !== 0) {
-              pri = tempProduct.price - Math.floor((tempProduct.price * tempProduct.discount) / 100);
+              pri =
+                tempProduct.price -
+                Math.floor((tempProduct.price * tempProduct.discount) / 100);
             } else {
               pri = tempProduct.price;
             }
@@ -107,18 +109,26 @@ class cardController {
               sellerId: unique[i],
               shopName: tempProduct.shopName,
               price,
-              products: p[i] ? [...p[i].products, {
-                _id: stockProduct[j]._id,
-                quantity: stockProduct[j].quantity,
-                productInfo: tempProduct,
-              }] : [{
-                _id: stockProduct[j]._id,
-                quantity: stockProduct[j].quantity,
-                productInfo: tempProduct,}],
+              products: p[i]
+                ? [
+                    ...p[i].products,
+                    {
+                      _id: stockProduct[j]._id,
+                      quantity: stockProduct[j].quantity,
+                      productInfo: tempProduct,
+                    },
+                  ]
+                : [
+                    {
+                      _id: stockProduct[j]._id,
+                      quantity: stockProduct[j].quantity,
+                      productInfo: tempProduct,
+                    },
+                  ],
             };
           }
         }
-      } 
+      }
       responseReturn(res, 200, {
         card_products: p,
         price: calculatePrice,
@@ -127,7 +137,6 @@ class cardController {
         outOfStockProduct,
         buy_product_item,
       });
-
     } catch (error) {
       console.log(error.message);
     }
