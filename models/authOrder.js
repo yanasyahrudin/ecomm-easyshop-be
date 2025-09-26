@@ -18,23 +18,23 @@ const authSchema = new Schema(
     },
     price: {
       type: Number,
-        required: true,
+      required: true,
     },
     payment_status: {
       type: String,
-        required: true,
+      required: true,
     },
     shippingInfo: {
       type: Object,
-        required: true,
+      required: true,
     },
     delivery_status: {
       type: String,
-        required: true,
+      required: true,
     },
     date: {
-        type: string,
-        required: true,
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }
