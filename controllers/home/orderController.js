@@ -1,9 +1,30 @@
 const authOrderModel = require("../../models/authOrder");
 const customerOrder = require("../../models/customerOrder");
 const cardModel = require("../../models/cardModel");
-const {responseReturn} = require("../../utiles/response");
+const { responseReturn } = require("../../utiles/response");
 const moment = require("moment");
+
 class orderController {
+  paymentCheck = async (id) => {
+    try {
+      const order = await customerOrder.findById(id);
+      if (order.payment_status === "unpaid") {
+        await customerOrder.findByIdAndUpdate(id, {
+          delivery_status: "cancelled",
+        });
+        await authOrderModel.updateMany(
+          { orderId: id },
+          {
+            delivery_status: "cancelled",
+          }
+        );
+      }
+      return true;
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
   place_order = async (req, res) => {
     const { price, products, shipping_fee, shippingInfo, userId } = req.body;
     let authorOrderData = [];
@@ -33,8 +54,8 @@ class orderController {
         shippingInfo,
         products: customerOrderProduct,
         price: price + shipping_fee,
-        payment_status: "pending",
-        delivery_status: "unpaid",
+        payment_status: "unpaid",
+        delivery_status: "pending",
         date: tempDate,
       });
       for (let i = 0; i < products.length; i++) {
@@ -48,7 +69,8 @@ class orderController {
           storePor.push(tempPro);
         }
         authorOrderData.push({
-          orderId: order.id, sellerId,
+          orderId: order.id,
+          sellerId,
           products: storePor,
           price: pri,
           payment_status: "unpaid",
@@ -60,10 +82,15 @@ class orderController {
       await authOrderModel.insertMany(authorOrderData);
       for (let i = 0; i < cardId.length; i++) {
         await cardModel.findByIdAndDelete(cardId[i]);
-
       }
+      setTimeout(() => {
+        this.paymentCheck(order.id);
+      }, 15000);
 
-      responseReturn(res, 200, { message: "Order Placed Success", data: { orderId: order.id } });
+      responseReturn(res, 200, {
+        message: "Order Placed Success",
+        data: { orderId: order.id },
+      });
     } catch (error) {
       console.log(error.message);
     }
