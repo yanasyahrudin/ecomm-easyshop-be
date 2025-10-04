@@ -104,13 +104,13 @@ class orderController {
       const recentOrders = await customerOrder
         .find({ customerId: new ObjectId(userId) })
         .limit(5);
-      const pendingOrders = await customerOrder
+      const pendingOrder = await customerOrder
         .find({ customerId: new ObjectId(userId), delivery_status: "pending" })
         .countDocuments();
-      const totalOrders = await customerOrder
+      const totalOrder = await customerOrder
         .find({ customerId: new ObjectId(userId) })
         .countDocuments();
-      const cancelledOrders = await customerOrder
+      const cancelledOrder = await customerOrder
         .find({
           customerId: new ObjectId(userId),
           delivery_status: "cancelled",
@@ -118,15 +118,19 @@ class orderController {
         .countDocuments();
       responseReturn(res, 200, {
         recentOrders,
-        pendingOrders,
-        totalOrders,
-        cancelledOrders,
+        pendingOrder,
+        totalOrder,
+        cancelledOrder,
       });
     } catch (error) {
       console.log(error.message);
     }
   };
   //end method
+
+  get_orders = async (req, res) => {
+    console.log(req.params);
+  }
 
 }
 module.exports = new orderController();
