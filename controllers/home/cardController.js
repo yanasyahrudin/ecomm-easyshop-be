@@ -3,6 +3,7 @@ const { responseReturn } = require("../../utiles/response");
 const {
   mongo: { ObjectId },
 } = require("mongoose");
+const wishlistModel = require("../../models/wishlistModel");
 class cardController {
   add_to_card = async (req, res) => {
     const { userId, productId, quantity } = req.body;
@@ -144,7 +145,7 @@ class cardController {
 
   delete_card_products = async (req, res) => {
     const { card_Id } = req.params;
-    
+
     try {
       await cardModel.findByIdAndDelete(card_Id);
       responseReturn(res, 200, { message: "Product Remove Successfully" });
@@ -156,11 +157,9 @@ class cardController {
   quantity_inc = async (req, res) => {
     const { card_Id } = req.params;
     try {
-      const product = await cardModel.findById(
-        card_Id
-      );
+      const product = await cardModel.findById(card_Id);
       const { quantity } = product;
-      await cardModel.findByIdAndUpdate(card_Id, { quantity: quantity + 1 })
+      await cardModel.findByIdAndUpdate(card_Id, { quantity: quantity + 1 });
       responseReturn(res, 200, {
         message: "Qty Updated",
         product,
@@ -173,12 +172,10 @@ class cardController {
   quantity_dec = async (req, res) => {
     const { card_Id } = req.params;
     try {
-      const product = await cardModel.findById(
-        card_Id
-      );
+      const product = await cardModel.findById(card_Id);
       const { quantity } = product;
-      if(quantity > 1){
-        await cardModel.findByIdAndUpdate(card_Id, { quantity: quantity - 1 })
+      if (quantity > 1) {
+        await cardModel.findByIdAndUpdate(card_Id, { quantity: quantity - 1 });
         responseReturn(res, 200, {
           message: "Qty Updated",
           product,
@@ -186,8 +183,29 @@ class cardController {
       }
     } catch (error) {
       console.log(error.message);
-    } 
+    }
   }; //end method
+
+  add_wishlist = async (req, res) => {
+    const { slug } = req.body;
+    try {
+      const product = await wishlistModel.findOne({ slug });
+      if (product) {
+        return responseReturn(res, 404, {
+          error: "Product Is Already In Wishlist",
+        });
+      } else {
+        await wishlistModel.create(req.body);
+        responseReturn(res, 201, {
+          message: "Product Add To Wishlist Success",
+        });
+      }
+    } catch (error) {
+      console.log(error.message);
+    }
+  }; //end method
+
+
 }
 
 module.exports = new cardController();

@@ -153,6 +153,7 @@ class orderController {
 
   get_order_details = async (req, res) => {
     const {orderId} = req.params
+    console.log(orderId);
 
     try {
       const order = await customerOrder.findById(orderId)
