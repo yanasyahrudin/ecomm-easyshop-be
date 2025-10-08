@@ -205,6 +205,18 @@ class cardController {
     }
   }; //end method
 
+  get_wishlist = async (req, res) => {
+    const { userId } = req.params;
+    try {
+      const wishlists = await wishlistModel
+        .find({ userId })
+      responseReturn(res, 200, { wishlistCount: wishlists.length, wishlists });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }
+  //end method
+
 
 }
 
