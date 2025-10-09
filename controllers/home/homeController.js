@@ -123,7 +123,16 @@ class homeController {
     } catch (error) {
       console.log(error.message);
     }
-  };
+  };//end method
+
+  product_details = async (req, res) => {
+    const { slug } = req.params;
+    try {
+      
+    } catch (error) {
+      console.log(error.message);
+    }
+  };//end method
 }
 
 module.exports = new homeController();
