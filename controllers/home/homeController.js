@@ -2,6 +2,8 @@ const categoryModel = require("../../models/categoryModel");
 const productModel = require("../../models/productModel");
 const { responseReturn } = require("../../utiles/response");
 const queryProducts = require("../../utiles/queryProducts");
+const reviewModel = require("../../models/reviewModel");
+const moment = require("moment");
 class homeController {
   formateProduct = (products) => {
     const productArray = [];
@@ -155,6 +157,42 @@ class homeController {
       console.log(error.message);
     }
   }; //end method
+
+  submit_review = async (req, res) => {
+    const { productId, rating, review, name } = req.body;
+    console.log(req.body);
+
+    try {
+      await reviewModel.create({
+        productId,
+        name,
+        rating,
+        review,
+        date: moment(Date.now()).format("LL"),
+      });
+
+      let rat = 0;
+      const reviews = await reviewModel.find({ productId });
+
+      for (let i = 0; i < reviews.length; i++) {
+        rat = rat + reviews[i].rating;
+      }
+
+      let productRating = 0;
+      if (reviews.length !== 0) {
+        productRating = (rat / reviews.length).toFixed(1);
+      }
+
+      responseReturn(res, 201, {
+        message: "Review Added Successfully",
+        productRating,
+      });
+    } catch (error) {
+      console.log(error.message);
+    }
+  }; //end method
+
+
 }
 
 module.exports = new homeController();
