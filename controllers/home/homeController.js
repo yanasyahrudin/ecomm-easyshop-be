@@ -4,6 +4,9 @@ const { responseReturn } = require("../../utiles/response");
 const queryProducts = require("../../utiles/queryProducts");
 const reviewModel = require("../../models/reviewModel");
 const moment = require("moment");
+const {
+  mongo: { ObjectId },
+} = require("mongoose");
 class homeController {
   formateProduct = (products) => {
     const productArray = [];
@@ -92,7 +95,6 @@ class homeController {
   query_products = async (req, res) => {
     const parPage = 12;
     req.query.parPage = parPage;
-    console.log(req.query);
 
     try {
       const products = await productModel.find({}).limit(parPage).sort({
@@ -265,7 +267,6 @@ class homeController {
         totalReview: getAll.length,
         rating_review,
       });
-      
     } catch (error) {
       console.log(error.message);
     }
