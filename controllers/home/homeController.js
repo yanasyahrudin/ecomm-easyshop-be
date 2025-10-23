@@ -160,7 +160,6 @@ class homeController {
 
   submit_review = async (req, res) => {
     const { productId, rating, review, name } = req.body;
-    console.log(req.body);
 
     try {
       await reviewModel.create({
@@ -191,6 +190,13 @@ class homeController {
       console.log(error.message);
     }
   }; //end method
+
+  get_reviews = async (req, res) => {
+    const { productId } = req.params;
+    const { pageNo } = req.query;
+    console.log(productId)
+    console.log(pageNo)
+  }
 
 
 }
