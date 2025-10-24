@@ -184,9 +184,12 @@ class homeController {
         productRating = (rat / reviews.length).toFixed(1);
       }
 
+      await productModel.findByIdAndUpdate(productId, {
+        rating: productRating,
+      });
+
       responseReturn(res, 201, {
-        message: "Review Added Successfully",
-        productRating,
+        message: "Review Added Successfully"
       });
     } catch (error) {
       console.log(error.message);
@@ -258,7 +261,7 @@ class homeController {
       }
 
       const getAll = await reviewModel.find({ productId });
-      const reviews = await reviewModel
+      const reviews = await reviewModel.find({ productId })
         .skip(skipPage)
         .limit(limit)
         .sort({ createdAt: -1 });
