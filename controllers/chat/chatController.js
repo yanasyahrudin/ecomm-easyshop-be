@@ -1,6 +1,7 @@
 const sellerModel = require("../../models/sellerModel");
 const customerModel = require("../../models/customerModel");
 const sellerCustomerModel = require("../../models/sellerCustomerModel");
+const { responseReturn } = require("../../utiles/responseReturn");
 
 class ChatController {
   add_customer_friend = async (req, res) => {
@@ -66,6 +67,47 @@ class ChatController {
             }
           );
         }
+
+        const messages = await sellerCustomerModel.find({
+          $or: [
+            {
+              $and: [
+                {
+                  receverId: { $eq: sellerId },
+                },
+                {
+                  senderId: {
+                    $eq: userId,
+                  },
+                },
+              ],
+            },
+            {
+              $and: [
+                {
+                  receverId: { $eq: userId },
+                },
+                {
+                  senderId: {
+                    $eq: sellerId,
+                  },
+                },
+              ],
+            },
+          ],
+        });
+        const MyFriends = await sellerCustomerModel.findOne({ myId: userId });
+        const currentFd = MyFriends.myFriends.find(
+          (fd) => fd.fdId.toString() === sellerId
+        );
+        return responseReturn(res, 200, {
+          MyFriend: MyFriends.myFriends,
+          currentFd,
+          messages,
+        });
+      } else {
+        const MyFriends = await sellerCustomerModel.findOne({ myId: userId });
+        responseReturn(res, 200, { MyFriend: MyFriends.myFriends });
       }
     } catch (error) {
       console.log(error.message);
