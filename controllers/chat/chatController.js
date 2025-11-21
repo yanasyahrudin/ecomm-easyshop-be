@@ -1,7 +1,7 @@
 const sellerModel = require("../../models/sellerModel");
 const customerModel = require("../../models/customerModel");
-const sellerCustomerModel = require("../../models/sellerCustomerModel");
-const { responseReturn } = require("../../utiles/responseReturn");
+const sellerCustomerModel = require("../../models/chat/sellerCustomerModel");
+const { responseReturn } = require("../../utiles/response");
 
 class ChatController {
   add_customer_friend = async (req, res) => {
@@ -113,5 +113,10 @@ class ChatController {
       console.log(error.message);
     }
   };
+
+  customer_message_add = async (req, res) => {
+    console.log(req.body);
+    const { senderId, receverId, message, time } = req.body;
+  }
 }
 module.exports = new ChatController();
